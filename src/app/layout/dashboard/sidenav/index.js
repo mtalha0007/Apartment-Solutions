@@ -14,9 +14,12 @@ import styled from "@emotion/styled";
 import { Images, Svgs } from "../../../assets/images/index";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navigation from "../../../../Navigation";
+import { useAuth } from '../../../context/index';
+
 import useBreadCrumb from "../../../hooks/useBreadCrumb";
 import { ExpandLess, ExpandMore, ImageSearch } from "@mui/icons-material";
 import Colors from "../../../assets/styles";
+import useProvideBreadCrumb from "../../../hooks/useProvideBreadCrumb";
 
 const drawerWidth = 270;
 
@@ -29,9 +32,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function SideNav({ status, toggleStatus }) {
+  const { userLogout } = useAuth();
+
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const {pageName} = useBreadCrumb()
+  const {pathname} = useLocation()
   const { setName } = useBreadCrumb();
+
   const [expand, setExpand] = useState({});
   console.log("🚀 ~ SideNav ~ expand:", expand);
 
@@ -77,14 +84,18 @@ export default function SideNav({ status, toggleStatus }) {
 
         <List sx={{ pr: "19px", pl: "50px", py: 2 }}>
           {Navigation.map((item, index) => {
-            const isSelected = item.path === pathname;
+         
+            const isSelected = item.path === pathname || item.path === pageName ;
+
+            {console.log(pageName)}
+         
             return (
               <Fragment key={index}>
                 <ListItem sx={{ p: 0, pb: 2 }}>
                   <ListItemButton
                     onClick={() => {
                       navigate(item.path);
-                      setName(item.name);
+                      setName(item.path);
                       handleToggleSubMenu(item.name);
                     }}
                     sx={{
@@ -135,7 +146,7 @@ export default function SideNav({ status, toggleStatus }) {
 
         <ListItem sx={{ p: 0, pb: 2 }}>
           <ListItemButton
-            onClick={() => {}}
+              onClick={() => userLogout()}
             sx={{
               p: "12px 16px",
               gap: "22px",

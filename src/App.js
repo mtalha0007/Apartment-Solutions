@@ -70,7 +70,7 @@ function App() {
                 <Route key={i} path={item.path} element={item.component} />
               ))}
             </Route> */}
-            <Route element={user ? <DashboardLayout /> : <Navigate to={"/login"} />}>
+            <Route element={!user ? <DashboardLayout /> : <Navigate to={"/login"} />}>
               {AdminRoutes.map((item, i) => (
                 <Route key={i} path={item.path} element={item.component} />
               ))}
