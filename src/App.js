@@ -8,6 +8,7 @@ import "@fontsource/noto-sans";
 import Login from "./app/views/admin/Login/index";
 import useAuth from "./app/hooks/useAuth";
 import { ToasterContainer } from "./app/components/Toaster";
+import "./App.css"
 
 
 const theme = createTheme({

@@ -12,8 +12,19 @@ import {
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Colors from "../../../../assets/styles";
+import { useForm } from "react-hook-form";
 
 const App = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    
+  } = useForm();
+
+  const onSubmit =(formData)=>{
+  console.log(formData)
+  }
   return (
     <>
       <Box
@@ -56,6 +67,7 @@ const App = () => {
         <Typography sx={{fontSize:"20px" ,fontWeight:"bold"}}>
           Company Details
         </Typography>
+        <Box component={"form"}  onSubmit={handleSubmit(onSubmit)}>    
         <Grid container spacing={3}>
             <Grid item xs={12} sm={12} >
               <Box display="flex" flexDirection="column" alignItems="center" width="100px" marginTop="20px">
@@ -76,9 +88,13 @@ const App = () => {
             <TextField
               fullWidth
               variant="outlined"
-              defaultValue="NovaWaveLLC"
               sx={{mt:0.5}}
               margin="normal"
+              {...register("companyName", {
+                required: "Company Name is required",
+              })}
+              error={errors.companyName && true}
+              helperText={errors?.companyName?.message}
               InputProps={{
                 style: { borderColor: "#ff4081" },
               }}
@@ -93,6 +109,11 @@ const App = () => {
               fullWidth
               variant="outlined"
               margin="normal"
+              {...register("phone", {
+                required: "Phone Number is required",
+              })}
+              error={errors.phone && true}
+              helperText={errors?.phone?.message}
             />
              <InputLabel sx={{fontWeight:"bold",color:Colors.black,mt:0.5}}>Email</InputLabel>
             <TextField
@@ -100,20 +121,27 @@ const App = () => {
               fullWidth
               variant="outlined"
               margin="normal"
+              {...register("email", {
+                required: "Email is required",
+              })}
+              error={errors.email && true}
+              helperText={errors?.email?.message}
             />
           </Grid>
           <Grid item xs={6}>
-          <InputLabel sx={{fontWeight:"bold",color:Colors.black}}>Additional Notes</InputLabel>
+          <InputLabel sx={{fontWeight:"bold",color:Colors.black}}>Additional Notes  (optional)</InputLabel>
             <TextField
               fullWidth
               variant="outlined"
               multiline
               rows={8}
               margin="normal"
+              {...register("notes")}
             />
           </Grid>
           <Grid item xs={12}>
             <Button
+            type="submit"
               variant="contained"
               color="secondary"
               style={{ backgroundColor: "#ff4081", color: "#fff" }}
@@ -122,6 +150,7 @@ const App = () => {
             </Button>
           </Grid>
         </Grid>
+        </Box>
       </Box>
     </>
   );

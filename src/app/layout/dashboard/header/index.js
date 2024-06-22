@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Box, Breadcrumbs, Button, Grid, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Avatar, Box, Breadcrumbs, Button, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import Colors from '../../../assets/styles'
 import useBreadCrumb from '../../../hooks/useBreadCrumb'
 import { Link } from 'react-router-dom';
@@ -53,8 +53,13 @@ function Header({ status, toggleStatus }) {
                   </IconButton>
                 </Box>
               </Box>
-              <Box > 
-                <Button
+              <Box sx={{display:"flex",mr:2,gap:'10px'}}> 
+                <Avatar></Avatar>
+                <Box sx={{display:"flex",flexDirection:"column"}}>
+                <Box sx={{color:"black",fontWeight:"bold"}}>Moni Roy</Box>
+                <Box sx={{color:"black"}}>Admin</Box>
+                </Box>
+                {/* <Button
                 onClick={() => userLogout()}
                   sx={{
                     gap: "5px",
@@ -65,10 +70,10 @@ function Header({ status, toggleStatus }) {
                 >
                   <Person />
                   {"Sign out"}
-                </Button>
-                <IconButton>
+                </Button> */}
+                {/* <IconButton>
                   <Notifications sx={{ color: "#718096" }} />
-                </IconButton>
+                </IconButton> */}
               </Box>
             </Box>
           </Grid>
