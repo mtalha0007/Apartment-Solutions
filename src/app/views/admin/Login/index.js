@@ -33,7 +33,8 @@ const navigate = useNavigate()
           flexDirection: "column",
           alignItems: "center",
           paddingTop: "120px",
-          backgroundColor:"#F1FEFD"
+          backgroundColor:"#F1FEFD",
+          height:{xs:"100vh",md:"auto"}
         }}
       >
         <Box >
@@ -162,16 +163,17 @@ const navigate = useNavigate()
         md={8}
         sx={{
           width: "100%",
-          // height: "100vh",
+          height: "100vh",
+          display:{xs:"none",md:"flex"}
         }}
       >
-        <Box sx={{ width: "100%", textAlign: "center" }}>
+        {/* <Box sx={{ width: "100%", textAlign: "center" }}> */}
           <img
             src={Images.sideImage}
             alt="Illustration"
-            style={{ maxWidth: "100%", height: "99.5vh", width: "100%" }}
+            style={{ maxWidth: "100%", height: "100vh", width: "100%" }}
           />
-        </Box>
+        {/* </Box> */}
       </Grid>
     </Grid>
           
