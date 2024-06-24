@@ -18,6 +18,10 @@ import {
   ClickAwayListener,
   Paper,
   Chip,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import Colors from "../../../../assets/styles";
@@ -36,6 +40,27 @@ const EmployeeForm = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [open, setOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState("");
+  const [area, setArea] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [selectedChips, setSelectedChips] = useState([]);
+
+  const propertyTypes = [
+    "AB Property",
+    "New Construction",
+    "High Rise Multi Family",
+    "Rehab or Renovations",
+    "Lease Up",
+    "Public Housing",
+    "Tax Credit",
+    "Large Community 500+ Units",
+  ];
+  const handleChipClick = (chip) => {
+    setSelectedChips((prevSelectedChips) =>
+      prevSelectedChips.includes(chip)
+        ? prevSelectedChips.filter((c) => c !== chip)
+        : [...prevSelectedChips, chip]
+    );
+  };
   const {
     register,
     handleSubmit,
@@ -46,6 +71,11 @@ const EmployeeForm = () => {
     handleSubmit: handleSubmit1,
     setValue,
     formState: { errors: errors1 },
+  } = useForm();
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    formState: { errors: errors2 },
   } = useForm();
 
   const skillTypes = [
@@ -62,6 +92,29 @@ const EmployeeForm = () => {
 
   const form2Data = (data) => {
     console.log(data);
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+  const form3Data = (data) => {
+    const obj = {
+      area:data.area,
+      jobType:data.jobType,
+      propertyType: selectedChips,
+      tempWork:[
+          {
+            hoursfrom: data.hoursFrom,
+            hoursTo: data.hoursTo,
+            workOnSameDay:data.workOnSameDay,
+            callAfterHour:data.callAfterHour,
+            workWeekends:data.workWeekends,
+            haveTransportation:data?.haveTransportation,
+            willtravel:data.willtravel,
+            willWorkOnBraunfels:data.willWorkOnBraunfels,
+            willWorkOnBorene:data.willWorkOnBorene,
+
+        }
+      ]
+    };
+    console.log(obj);
     setActiveStep((prevStep) => prevStep + 1);
   };
 
@@ -109,10 +162,10 @@ const EmployeeForm = () => {
       borderTopColor: "#ff4081 !important", // Pink color for active step
     },
     "& .Mui-disabled": {
-        borderColor: "grey !important",
+      borderColor: "grey !important",
     },
     "& .Mui-completed , .Mui-active": {
-       color:"#ff4081 !important"
+      color: "#ff4081 !important",
     },
   }));
 
@@ -495,15 +548,585 @@ const EmployeeForm = () => {
               </form>
             )}
             {activeStep === 2 && (
+              <form
+                style={{
+                  marginTop: "14px",
+                  marginLeft: "16px",
+                  marginRight: "16px",
+                  padding: "20px",
+                  backgroundColor: Colors.backgroundColor,
+                  boxShadow: "0xp 0px 100px 0xp rgba(0,0,0,0.1)",
+                  borderRadius: "8px",
+                }}
+                onSubmit={handleSubmit2(form3Data)}
+              >
+                <Typography sx={{ fontSize: "20px", fontWeight: "bold" }}>
+                  Job Preference
+                </Typography>
+                <Box sx={{ mt: 2 }}>
+                  <Grid container spacing={10}>
+                    {/* first  */}
+                    <Grid item xs={12} sm={12}>
+                      <Grid container spacing={8}>
+                        <Grid item xs={12} sm={3}>
+                          <InputLabel
+                            sx={{ fontWeight: "bold", color: Colors.black }}
+                          >
+                            Area Town Preferred
+                          </InputLabel>
+                          <TextField
+                            fullWidth
+                            select
+                            {...register2("area", {
+                              required: "Area is required",
+                            })}
+                            error={errors2.area && true}
+                            helperText={errors2?.area?.message}
+                            value={area}
+                            onChange={(e) => setArea(e.target.value)}
+                          >
+                            <MenuItem value="karachi">Karachi</MenuItem>
+                            <MenuItem value="lahore">lahore</MenuItem>
+                          </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                          <InputLabel
+                            sx={{ fontWeight: "bold", color: Colors.black }}
+                          >
+                            Job Type Preference
+                          </InputLabel>
+                          <TextField
+                            fullWidth
+                            select
+                            {...register2("jobType", {
+                              required: "Job Type is required",
+                            })}
+                            error={errors2.jobType && true}
+                            helperText={errors2?.jobType?.message}
+                            value={jobType}
+                            onChange={(e) => setJobType(e.target.value)}
+                          >
+                            <MenuItem value="temporary">Temporary</MenuItem>
+                            <MenuItem value="permanent">Permanent</MenuItem>
+                          </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <InputLabel
+                            sx={{ fontWeight: "bold", color: Colors.black }}
+                          >
+                            Property Type
+                          </InputLabel>
+                          {propertyTypes.map((type) => (
+                            <Chip
+                              key={type}
+                              label={type}
+                              onClick={() => handleChipClick(type)}
+                              sx={{
+                                m: 1,
+                                ml: 0,
+                                border: selectedChips.includes(type)
+                                  ? `1px solid ${Colors.primary}`
+                                  : "1px solid grey",
+                                background: "none",
+                                color: selectedChips.includes(type)
+                                  ? Colors.primary
+                                  : "black",
+                              }}
+                              {...register2("propertyType")}
+                            />
+                          ))}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
+                    {/* second */}
+                    <Grid item xs={12} sm={12}>
+                      <Grid container spacing={8}>
+                        <Grid item xs={12} sm={6} sx={{ mt: 1 }}>
+                          <Grid container spacing={2} alignItems="center">
+                            <Grid item xs={12} sm={12}>
+                              <InputLabel
+                                sx={{ fontWeight: "bold", color: Colors.black }}
+                              >
+                                Specifications for Temporary Work
+                              </InputLabel>
+                              <InputLabel sx={{ mt: 1, color: Colors.black }}>
+                                Hours Avaialble?
+                              </InputLabel>
+                            </Grid>
+
+                            <Grid item xs={6} md={5.5}>
+                              <TextField
+                                fullWidth
+                                type="time"
+                                {...register2("hoursFrom")}
+                             
+                              />
+                            </Grid>
+                            <Grid item xs={1}>
+                              to
+                            </Grid>
+                            <Grid item xs={6} md={5.5}>
+                              <TextField
+                                fullWidth
+                                type="time"
+                                {...register2("hoursTo")}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Will you work on same day assignments?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="tempWork.sameDay"
+                                    {...register2("workOnSameDay")}
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  On Call After Hours/Weekends?{" "}
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="callAfter"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                    {...register2("callAfterHour")} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Work Weekends?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="workWeekends"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                    {...register2("workWeekends")}
+                                    
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          <Grid item xs={12} sm={12} sx={{ mt: 4.4 }}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Do you have Transportation?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="transportation"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} 
+                                    {...register2("haveTransportation")}
+                                    >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Will You Travel?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="travel"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                    {...register2("willTravel")}
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Will You Work on Braunfels?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="braunfels"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                    {...register2("willWorkOnBraunfels")}
+
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Will You work on Boerne?
+                                </InputLabel>
+                                <FormControl component="fieldset" {...register2("willWorkOnBorene")}>
+                                  <RadioGroup
+                                    name="borene"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                    
+                                    
+                                    // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
+                    {/* third */}
+                    {/* <Grid item xs={12} sm={12}>
+                      <Grid container spacing={8}>
+                        <Grid item xs={12} sm={6} sx={{ mt: 1 }}>
+                          <Grid container spacing={2} alignItems="center">
+                            <Grid item xs={12} sm={12}>
+                              <InputLabel
+                                sx={{ fontWeight: "bold", color: Colors.black }}
+                              >
+                                Specifications for Direct Hire
+                              </InputLabel>
+                              <InputLabel sx={{ mt: 1, color: Colors.black }}>
+                                Salary Desired
+                              </InputLabel>
+                            </Grid>
+
+                            <Grid item xs={6} md={8}>
+                              <TextField
+                                fullWidth
+                                type="text"
+                                placeholder="Enter Amount"
+                                // value={formValues.tempWork.hoursFrom}
+                                // onChange={handleChange}
+                              />
+                            </Grid>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  On Call After Hours/Weekends?{" "}
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="callAfter"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Work Weekends?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="workWeekends2"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Insurance Benefits Mandatory?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="tempWork.sameDay"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} sm={6} sx={{ mt: 1 }}>
+                          <Grid container spacing={2} alignItems="center">
+                            <Grid item xs={12} sm={12} sx={{ mt: 3 }}>
+                              <InputLabel sx={{ mt: 1, color: Colors.black }}>
+                                Minimum Salary
+                              </InputLabel>
+                            </Grid>
+
+                            <Grid item xs={6} md={8}>
+                              <TextField
+                                fullWidth
+                                type="text"
+                                placeholder="Enter Amount"
+                                // value={formValues.tempWork.hoursFrom}
+                                // onChange={handleChange}
+                              />
+                            </Grid>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} sx={{ mt: 2 }}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Live-On-Site?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="onSite"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={12}>
+                            <Grid container spacing={2} alignItems="center">
+                              <Grid item xs={12}>
+                                <InputLabel sx={{ color: Colors.black }}>
+                                  Willing To Relocate?
+                                </InputLabel>
+                                <FormControl component="fieldset">
+                                  <RadioGroup
+                                    name="r elocate"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }} // Added flexbox properties
+                                  >
+                                    <FormControlLabel
+                                      value="yes"
+                                      control={<Radio />}
+                                      label="Yes"
+                                    />
+                                    <FormControlLabel
+                                      value="no"
+                                      control={<Radio />}
+                                      label="No"
+                                    />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid> */}
+                  </Grid>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "10px",
+                    mt: 2,
+                  }}
+                >
+                  {activeStep !== 0 && (
+                    <Button
+                      sx={{ px: 4 }}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleBack}
+                    >
+                      Back
+                    </Button>
+                  )}
+
+                  <Button type="submit" variant="contained" color="primary">
+                    {activeStep === steps.length - 1 ? "Finish" : "Continue"}
+                  </Button>
+                </Box>
+              </form>
+            )}
+            {activeStep === 3 && (
               <Box
                 sx={{
                   display: "flex",
                   gap: "10px",
+                  mt: 2,
                 }}
               >
                 {activeStep !== 0 && (
                   <Button
-                    type="submit"
                     sx={{ px: 4 }}
                     variant="contained"
                     color="primary"
@@ -517,6 +1140,8 @@ const EmployeeForm = () => {
                   {activeStep === steps.length - 1 ? "Finish" : "Continue"}
                 </Button>
               </Box>
+
+              //  )}
             )}
           </>
         )}
